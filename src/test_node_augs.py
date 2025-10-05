@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType, text_node_to_html_node
-from Node_Augmentations import split_nodes_delimiter
+from Node_Augmentations import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 
 
 class TestNodeAugs(unittest.TestCase):
@@ -50,5 +50,21 @@ class TestNodeAugs(unittest.TestCase):
             TextNode("bold text with `code` inside", TextType.BOLD),
             TextNode(" it", TextType.PLAIN),
         ])
+
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+        "This is text with an ![image link](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        print(matches)
+        self.assertListEqual([("image link", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_markdown_links (self):
+        matches = extract_markdown_links(
+        "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        )
+        print(matches)
+        self.assertListEqual([("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")], matches)
+
+
 if __name__ == "__main__":
     unittest.main()
