@@ -32,7 +32,7 @@ def split_nodes_image(old_nodes):
         if node.text_type != TextType.PLAIN:
             new_node_list.append(node)
             continue
-        if extract_markdown_images(node.text) is None:
+        if not extract_markdown_images(node.text):
             new_node_list.append(node)
             continue
         image_list = extract_markdown_images(node.text)
@@ -54,7 +54,7 @@ def split_nodes_link(old_nodes):
         if node.text_type != TextType.PLAIN:
             new_node_list.append(node)
             continue
-        if extract_markdown_links(node.text) is None:
+        if not extract_markdown_links(node.text):
             new_node_list.append(node)
             continue
         link_list = extract_markdown_links(node.text)
@@ -68,3 +68,7 @@ def split_nodes_link(old_nodes):
         if last_value[-1] != "":
             new_node_list.append(TextNode(text_value[-1], TextType.PLAIN))
     return new_node_list
+
+def text_to_textnodes(text):
+    node = TextNode(text, TextType.PLAIN)
+    return split_nodes_delimiter(split_nodes_delimiter(split_nodes_delimiter(split_nodes_link(split_nodes_image([node])), "`", TextType.CODE), "_", TextType.ITALIC), "**", TextType.BOLD)

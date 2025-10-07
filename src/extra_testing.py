@@ -1,6 +1,6 @@
 from htmlnode import HTMLNode, LeafNode
 from textnode import TextNode, TextType
-from Node_Augmentations import split_nodes_image
+from Node_Augmentations import split_nodes_image, extract_markdown_images, extract_markdown_links
 
 
 def main():
@@ -21,5 +21,7 @@ def main():
         )
     new_nodes = split_nodes_image([node])
     print(new_nodes)
+
+    print(extract_markdown_images("this is not an image"))
 
 main()
