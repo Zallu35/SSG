@@ -1,6 +1,7 @@
 from htmlnode import HTMLNode, LeafNode
 from textnode import TextNode, TextType
 from Node_Augmentations import split_nodes_image, extract_markdown_images, extract_markdown_links
+from Markdown_Functions import markdown_to_blocks, block_to_block_type
 
 
 def main():
@@ -20,8 +21,23 @@ def main():
             TextType.PLAIN,
         )
     new_nodes = split_nodes_image([node])
-    print(new_nodes)
+    #print(new_nodes)
 
-    print(extract_markdown_images("this is not an image"))
+    #print(extract_markdown_images("this is not an image"))
+
+    blocks = markdown_to_blocks("""
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+""")
+    #print(blocks)
+
+    #print(block_to_block_type("```this is a test```"))
+    dummystring = "- I just need to know how this works\n- Final logic check"
+    print(block_to_block_type(dummystring))
 
 main()
