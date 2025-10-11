@@ -1,4 +1,7 @@
 from enum import Enum
+from textnode import *
+from htmlnode import *
+from Node_Augmentations import text_to_textnodes
 
 
 def markdown_to_blocks(markdown):
@@ -47,3 +50,79 @@ def block_to_block_type(text):
                 return BlockType.PARAGRAPH
         return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
+
+def markdown_to_html_node(markdown):
+    mkd_blocks = markdown_to_blocks(markdown)
+    child_list = []
+    for block in mkd_blocks:
+        btype = block_to_block_type(block)
+        if btype == BlockType.PARAGRAPH:
+            child_list.extend(paragraph_ParentNode(block))
+        if btype == BlockType.HEADING:
+            child_list.append(heading_ParentNode(block))
+        if btype == BlockType.CODE:
+            child_list.append(code_ParentNode(block))
+        if btype == BlockType.QUOTE:
+            child_list.extend(quote_ParentNode(block))
+        if btype == BlockType.UNORDERED_LIST:
+            child_list.append(unorderedlist_ParentNode(block))
+        if btype == BlockType.ORDERED_LIST:
+            child_list.append(orderedlist_ParentNode(block))
+    return ParentNode("div", child_list)
+    
+def heading_ParentNode(text):
+    counter = 6
+    num = 0
+    while counter != 0:
+        num = text.count("#", 0, counter)
+        if num == text.count("#", 0, num):
+            counter = 0
+        else:
+            counter = num
+    chtextnodes = text_to_textnodes(text.lstrip("# "))
+    chhtmlnodes = []
+    for node in chtextnodes:
+        chhtmlnodes.append(text_node_to_html_node(node))
+    return ParentNode(f"h{num}", chhtmlnodes)
+
+def quote_ParentNode(text):
+    newtext = text.split("\n")
+    textlist = []
+    for line in newtext:
+        textlist.append(line.lstrip(">").strip())
+    endtext = " ".join(textlist)
+    chtextnodes = text_to_textnodes(endtext)
+    chhtmlnodes = []
+    for node in chtextnodes:
+        chhtmlnodes.append(text_node_to_html_node(node))
+    return [ParentNode("blockquote", chhtmlnodes)]
+
+def paragraph_ParentNode(text):
+    newtext = text.replace("\n", " ")
+    #PNlist = []
+    #for line in newtext:
+    chtextnodes = text_to_textnodes(newtext)
+    chhtmlnodes = []
+    for node in chtextnodes:
+        chhtmlnodes.append(text_node_to_html_node(node))
+        #PNlist.append(ParentNode("p", chhtmlnodes))
+    return [ParentNode("p", chhtmlnodes)]
+
+def code_ParentNode(text):
+    stext = text.strip("`").lstrip("\n")
+    LNode = text_node_to_html_node(TextNode(stext, TextType.CODE))
+    return ParentNode("pre", [LNode])
+
+def unorderedlist_ParentNode(text):
+    nodelist = []
+    tl = text.split("\n")
+    for line in tl:
+        nodelist.append(LeafNode("li", line.lstrip("- ")))
+    return ParentNode("ul", nodelist)
+
+def orderedlist_ParentNode(text):
+    nodelist = []
+    tl = text.split("\n")
+    for line in tl:
+        nodelist.append(LeafNode("li", line[3:]))
+    return ParentNode("ol", nodelist)

@@ -1,5 +1,5 @@
 import unittest
-from Markdown_Functions import markdown_to_blocks, BlockType, block_to_block_type
+from Markdown_Functions import markdown_to_blocks, BlockType, block_to_block_type, markdown_to_html_node
 
 class TestMkdFuncs(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -67,3 +67,88 @@ This is the same paragraph on a new line
     def test_block_types_paragraph6(self):
         dummystring = "1. What if EVERYTHING else\n3. is actually just a paragraph\n2. somewhere...?"
         self.assertEqual(block_to_block_type(dummystring), BlockType.PARAGRAPH)
+
+    def test_paragraphs(self):
+        md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with _italic_ text and `code` here
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+        )
+
+    def test_codeblock(self):
+        md = """
+```
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
+        )
+
+    def test_header(self):
+        md = """
+# I'm testing headers
+
+## I# also want to test stupid headers
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>I'm testing headers</h1><h2>I# also want to test stupid headers</h2></div>",
+        )
+
+    def test_quote(self):
+        md = """
+>I'm testing quotes
+>I think this is gonna work!
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>I'm testing quotes I think this is gonna work!</blockquote></div>",
+        )
+
+    def test_ul(self):
+        md = """
+- I'm testing headers
+- I# also want to test stupid headers
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>I'm testing headers</li><li>I# also want to test stupid headers</li></ul></div>",
+        )
+
+    def test_ol(self):
+        md = """
+1. I'm testing headers
+2. I# also want to test stupid headers
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>I'm testing headers</li><li>I# also want to test stupid headers</li></ol></div>",
+        )

@@ -1,7 +1,7 @@
 from htmlnode import HTMLNode, LeafNode
 from textnode import TextNode, TextType
 from Node_Augmentations import split_nodes_image, extract_markdown_images, extract_markdown_links
-from Markdown_Functions import markdown_to_blocks, block_to_block_type
+from Markdown_Functions import markdown_to_blocks, block_to_block_type, markdown_to_html_node
 
 
 def main():
@@ -28,8 +28,10 @@ def main():
     blocks = markdown_to_blocks("""
 This is **bolded** paragraph
 
-This is another paragraph with _italic_ text and `code` here
-This is the same paragraph on a new line
+>This is another paragraph with _italic_ text and `code` here
+>This is the same paragraph on a new line
+>
+>extra quote testing
 
 - This is a list
 - with items
@@ -38,6 +40,18 @@ This is the same paragraph on a new line
 
     #print(block_to_block_type("```this is a test```"))
     dummystring = "- I just need to know how this works\n- Final logic check"
-    print(block_to_block_type(dummystring))
+    #print(block_to_block_type(dummystring))
+
+    md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with _italic_ text and `code` here
+
+"""
+
+    node = markdown_to_html_node(md)
+    print(node.to_html())
 
 main()
