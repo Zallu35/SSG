@@ -2,6 +2,9 @@ from htmlnode import HTMLNode, LeafNode
 from textnode import TextNode, TextType
 from Node_Augmentations import split_nodes_image, extract_markdown_images, extract_markdown_links
 from Markdown_Functions import markdown_to_blocks, block_to_block_type, markdown_to_html_node
+from main import copy_dir
+import os
+import shutil
 
 
 def main():
@@ -52,6 +55,8 @@ This is another paragraph with _italic_ text and `code` here
 """
 
     node = markdown_to_html_node(md)
-    print(node.to_html())
+    #print(node.to_html())
+
+    copy_dir("/home/sam/projects/github.com/Zallu35/SSG/public/testsrc", "/home/sam/projects/github.com/Zallu35/SSG/public/testdst")
 
 main()
