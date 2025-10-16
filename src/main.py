@@ -41,8 +41,10 @@ def generate_page(from_path, dest_path, template_path, basepath):
     title_string = extract_title(markdown_string)
     template_string = template_string.replace('{{ Title }}', title_string)
     template_string = template_string.replace('{{ Content }}', html_string)
-    template_string.replace('href="/', f'href="{basepath}')
-    template_string.replace('src="/', f'src="{basepath}')
+    #print(template_string)
+    template_string = template_string.replace('href="/', f'href="{basepath}')
+    template_string = template_string.replace('src="/', f'src="{basepath}')
+    #print(template_string)
     with open(dest_path, 'w') as d:
         d.write(template_string)
 
