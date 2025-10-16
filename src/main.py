@@ -5,10 +5,10 @@ from Markdown_Functions import markdown_to_html_node, extract_title
 
 
 def main():
-    tnode = TextNode("testing time", TextType.BOLD, "google.com")
-    print(tnode)
+    #tnode = TextNode("testing time", TextType.BOLD, "google.com")
+    #print(tnode)
     copy_dir("/home/sam/projects/github.com/Zallu35/SSG/static", "/home/sam/projects/github.com/Zallu35/SSG/public")
-    generate_page("/home/sam/projects/github.com/Zallu35/SSG/content/index.md", "/home/sam/projects/github.com/Zallu35/SSG/public/index.html", "/home/sam/projects/github.com/Zallu35/SSG/template.html")
+    generate_pages_recursive("/home/sam/projects/github.com/Zallu35/SSG/content", "/home/sam/projects/github.com/Zallu35/SSG/template.html", "/home/sam/projects/github.com/Zallu35/SSG/public")
 
 
 def copy_dir(source, dest):
@@ -39,6 +39,18 @@ def generate_page(from_path, dest_path, template_path):
     template_string = template_string.replace('{{ Content }}', html_string)
     with open(dest_path, 'w') as d:
         d.write(template_string)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    content_list = os.listdir(dir_path_content)
+    for d in content_list:
+        content_path = f"{dir_path_content}/{d}"
+        destination_path = f"{dest_dir_path}/{d}"
+        if os.path.isfile(content_path):
+            destination_path = destination_path.replace(".md", ".html")
+            generate_page(content_path, destination_path, template_path)
+        else:
+            os.mkdir(destination_path)
+            generate_pages_recursive(content_path, template_path, destination_path)
     
 
 main()
