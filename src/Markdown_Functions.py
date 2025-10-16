@@ -117,12 +117,28 @@ def unorderedlist_ParentNode(text):
     nodelist = []
     tl = text.split("\n")
     for line in tl:
-        nodelist.append(LeafNode("li", line.lstrip("- ")))
+        new_text = line.lstrip("- ")
+        chtextnodes = text_to_textnodes(new_text)
+        chhtmlnodes = []
+        for node in chtextnodes:
+            chhtmlnodes.append(text_node_to_html_node(node))
+        nodelist.append(ParentNode("li", chhtmlnodes))
     return ParentNode("ul", nodelist)
 
 def orderedlist_ParentNode(text):
     nodelist = []
     tl = text.split("\n")
     for line in tl:
-        nodelist.append(LeafNode("li", line[3:]))
+        new_text = line[3:]
+        chtextnodes = text_to_textnodes(new_text)
+        chhtmlnodes = []
+        for node in chtextnodes:
+            chhtmlnodes.append(text_node_to_html_node(node))
+        nodelist.append(ParentNode("li", chhtmlnodes))
     return ParentNode("ol", nodelist)
+
+def extract_title(markdown):
+    parts = markdown.split("\n")
+    if not parts[0].startswith("# "):
+        raise Exception("No Title Found!")
+    return parts[0].lstrip("# ")

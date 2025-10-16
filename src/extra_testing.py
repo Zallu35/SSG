@@ -1,13 +1,13 @@
 from htmlnode import HTMLNode, LeafNode
 from textnode import TextNode, TextType
 from Node_Augmentations import split_nodes_image, extract_markdown_images, extract_markdown_links
-from Markdown_Functions import markdown_to_blocks, block_to_block_type, markdown_to_html_node
-from main import copy_dir
+from Markdown_Functions import markdown_to_blocks, block_to_block_type, markdown_to_html_node, extract_title
+#from main import copy_dir, generate_page
 import os
 import shutil
 
 
-def main():
+def general_test():
     LN = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
     HN = HTMLNode("a", "Click me!", None, {"href": "https://www.google.com"})
     #print(LN)
@@ -57,6 +57,17 @@ This is another paragraph with _italic_ text and `code` here
     node = markdown_to_html_node(md)
     #print(node.to_html())
 
-    copy_dir("/home/sam/projects/github.com/Zallu35/SSG/public/testsrc", "/home/sam/projects/github.com/Zallu35/SSG/public/testdst")
+    #copy_dir("/home/sam/projects/github.com/Zallu35/SSG/public/testsrc", "/home/sam/projects/github.com/Zallu35/SSG/public/testdst")
 
-main()
+    print(extract_title("# This is a title!"))
+    print(extract_title("# This is a title!\nThis should not be included..."))
+    #print(extract_title("#This is imporperly formatted"))
+    #print(extract_title("This is NOT a title!"))
+    
+    #with open("/home/sam/projects/github.com/Zallu35/SSG/content/index.md") as a:
+        #writing = a.read()
+    #tn1 = markdown_to_html_node(writing)
+    #print(tn1)
+    #generate_page("/home/sam/projects/github.com/Zallu35/SSG/content/index.md", "/home/sam/projects/github.com/Zallu35/SSG/public/testdir/index.html", "/home/sam/projects/github.com/Zallu35/SSG/template.html")
+
+general_test()
