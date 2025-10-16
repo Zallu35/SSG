@@ -10,6 +10,7 @@ def main():
         basepath = sys.argv[1]
     else:
         basepath = "/"
+    print(f"basepath={basepath}")
     copy_dir("./static", "./docs")
     generate_pages_recursive("./content", "./template.html", "./docs", basepath)
 
